@@ -1,33 +1,56 @@
+#include <math.h>
 #include <raylib.h>
 #include <stdbool.h>
+#include <sys/param.h>
 
 #define WIDTH 900
 #define HEIGHT 600
 
-#define WAVE_SPEED 10
+#define WAVE_SPEED 200
 #define PARTICLE_SIZE 10
+#define PARTICLE_PER_WAVE 10000
+#define TOTAL_POSSIBLE_PARTICLES PARTICLE_PER_WAVE * 10
 
 struct Particle {
   float x, y, vx, vy;
 };
 
-struct Particle particle;
+int emitted_particles = 0;
+int slot_index = 0;
+struct Particle particles[TOTAL_POSSIBLE_PARTICLES];
 
-void init_wave(Vector2 origin) {
+void emit_wave(Vector2 origin) {
   // emit thousands of individual particles in different (circular) directions
-  particle.x = origin.x;
-  particle.y = origin.y;
-  particle.vx = 1;
-  particle.vy = 1;
+  if (slot_index + PARTICLE_PER_WAVE >= TOTAL_POSSIBLE_PARTICLES) {
+    slot_index = 0;
+  }
+  int start_index = slot_index;
+  int end_index = start_index + PARTICLE_PER_WAVE;
+
+  for (int i = start_index; i < end_index; i++) {
+    particles[i].x = origin.x;
+    particles[i].y = origin.y;
+    particles[i].vx = WAVE_SPEED * sinf(2 * M_PI * (float)(i - start_index) /
+                                        PARTICLE_PER_WAVE);
+    particles[i].vy = WAVE_SPEED * cosf(2 * M_PI * (float)(i - start_index) /
+                                        PARTICLE_PER_WAVE);
+  }
+  emitted_particles += PARTICLE_PER_WAVE;
+  slot_index += PARTICLE_PER_WAVE;
 }
 
 void move_wave(float dt) {
-  particle.x += particle.vx * dt;
-  particle.y += particle.vy * dt;
+  for (int i = 0; i < MIN(emitted_particles, TOTAL_POSSIBLE_PARTICLES); i++) {
+    particles[i].x += particles[i].vx * dt;
+    particles[i].y += particles[i].vy * dt;
+  }
 }
 
 void draw_wave() {
-  DrawRectangle(particle.x, particle.y, PARTICLE_SIZE, PARTICLE_SIZE, WHITE);
+  for (int i = 0; i < MIN(emitted_particles, TOTAL_POSSIBLE_PARTICLES); i++) {
+    DrawRectangle(particles[i].x, particles[i].y, PARTICLE_SIZE, PARTICLE_SIZE,
+                  WHITE);
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -36,22 +59,25 @@ int main(int argc, char *argv[]) {
 
   SetTargetFPS(60);
 
-  bool wave_emitted = false;
+  float interval = 0;
   while (!WindowShouldClose()) {
 
     Vector2 mouse_pos = GetMousePosition();
-    if (!wave_emitted) {
-      init_wave(mouse_pos);
-      wave_emitted = true;
+
+    float dt = GetFrameTime();
+    interval += dt;
+
+    if (interval >= 1) {
+
+      emit_wave(mouse_pos);
+      interval = 0;
     }
 
-    move_wave(GetFrameTime());
+    move_wave(dt);
     BeginDrawing();
     ClearBackground(BLACK);
 
-    DrawRectangleV(mouse_pos, (Vector2){10, 10}, WHITE);
     draw_wave();
-
     EndDrawing();
   }
 
