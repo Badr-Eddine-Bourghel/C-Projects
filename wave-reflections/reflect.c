@@ -6,8 +6,8 @@
 #define WIDTH 900
 #define HEIGHT 600
 
-#define WAVE_SPEED 200
-#define PARTICLE_SIZE 10
+#define WAVE_SPEED 150
+#define PARTICLE_SIZE 6
 #define PARTICLE_PER_WAVE 10000
 #define TOTAL_POSSIBLE_PARTICLES PARTICLE_PER_WAVE * 10
 
@@ -43,6 +43,26 @@ void move_wave(float dt) {
   for (int i = 0; i < MIN(emitted_particles, TOTAL_POSSIBLE_PARTICLES); i++) {
     particles[i].x += particles[i].vx * dt;
     particles[i].y += particles[i].vy * dt;
+
+    // Left boundries
+    if (particles[i].x < 0) {
+      particles[i].x = 0;
+      particles[i].vx = -particles[i].vx;
+    };
+    if (particles[i].y < 0) {
+      particles[i].y = 0;
+      particles[i].vy = -particles[i].vy;
+    };
+
+    // Right boundries
+    if (particles[i].x + PARTICLE_SIZE > WIDTH) {
+      particles[i].x = WIDTH - PARTICLE_SIZE;
+      particles[i].vx = -particles[i].vx;
+    };
+    if (particles[i].y + PARTICLE_SIZE > HEIGHT) {
+      particles[i].y = HEIGHT - PARTICLE_SIZE;
+      particles[i].vy = -particles[i].vy;
+    };
   }
 }
 
