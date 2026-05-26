@@ -18,6 +18,13 @@ void draw_bars() {
   };
 }
 
+void swap(int i, int j) {
+
+  int tmp = numbers[i];
+  numbers[i] = numbers[j];
+  numbers[j] = tmp;
+}
+
 void init_numbers() {
   for (int i = 0; i < COUNT; i++) {
     numbers[i] = i;
@@ -28,9 +35,25 @@ void init_numbers() {
     int j = rand() % (i + 1); // Generates a random number between 0 and i
 
     // Swap the array entries
-    int tmp = numbers[i];
-    numbers[i] = numbers[j];
-    numbers[j] = tmp;
+    swap(i, j);
+  }
+}
+
+void sort_step() {
+  static int i;
+
+  if (i < COUNT - 1) {
+
+    int current_value = numbers[i];
+    int next_value = numbers[i + 1];
+
+    if (current_value > next_value) {
+      swap(i, i + 1);
+    }
+    i++;
+  } else {
+    // Reached the end of the array -> go back to 0 and sort again
+    i = 0;
   }
 }
 
@@ -40,9 +63,13 @@ int main() {
 
   InitWindow(WIDTH, HEIGHT, "Soritng Visualizer");
 
+  SetTargetFPS(COUNT);
   while (!WindowShouldClose()) {
-    BeginDrawing();
 
+    sort_step();
+
+    BeginDrawing();
+    ClearBackground(BLACK);
     // Draw numbers
     draw_bars();
 
