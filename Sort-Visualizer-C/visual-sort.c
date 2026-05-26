@@ -86,7 +86,7 @@ int main() {
 
   init_numbers();
 
-  InitWindow(WIDTH, HEIGHT, "Soritng Visualizer");
+  InitWindow(WIDTH, HEIGHT, "Sorting Visualizer");
 
   SetTargetFPS(COUNT * 3);
 
