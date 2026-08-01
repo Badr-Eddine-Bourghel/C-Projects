@@ -204,6 +204,61 @@ static int handle_input(void){
   return 1;
 }
 
+// Simulation 
+
+/* return 0 if game over */
+static int step(void){
+  Point next = snake[0];
+  switch (dir){
+    case DIR_UP:    next.y--; break;
+    case DIR_DOWN:  next.y++; break;
+    case DIR_LEFT:  next.x--; break;
+    case DIR_RIGHT: next.x++; break;
+  }
+
+  /* wraparound instead of dying on walls*/ 
+  if (next.x <= 0) next.x = width -2;
+  else if (next.x >= width -1) next.x = 1;
+  if (next.y <0) next.y = height-2;
+  else if (next.y >=height-1) next.y = 1;
+
+  /* obstalce collision */
+  for (int i = 0; i < obstacle_count; i++){
+    if(obstacles[i].x == next.x && obstacles[i].y == next.y)
+      return 0;
+  }
+
+  /* self collision */ 
+  for (int i = 0; i < snake_len; i++){
+    if(snake[i].x == next.x && snake[i].y == next.y)
+      return 0;
+  }
+
+  int grew = (next.x == food.x && next.y == food.y);
+
+  int limit = grew ? snake_len : snake_len -1;
+  for (int i = limit; i> 0 ; i--){
+    snake[i] = snake[i-1];
+  }
+  snake[0] = next;
+
+  if (grew) {
+    if (food_is_golden){
+      score += 50;
+      if (snake_len + 2 < MAX_SNAKE_LEN) snake_len +=3;
+    } else {
+      score += 10;
+      if (snake_len < MAX_SNAKE_LEN) snake_len++;
+    }
+    beep();
+    spawn_food();
+  } else if (food_is_golden){
+    if (--golden_ticks-left <= 0) spawn_food();
+  }
+
+  return 1;
+}
+
 
 
 
