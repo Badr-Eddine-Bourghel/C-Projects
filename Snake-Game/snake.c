@@ -5,7 +5,7 @@
 #include <unistd.h>
 
 #define MAX_SNAKE_LEN     1024
-#define MAX_OBSTACKE      40
+#define MAX_OBSTACLES      40
 #define INITIAL_DELAY_US  120000
 #define GOLDEN_CHANCE     5  /* 1 in N food spawns is golden*/
 #define GOLDEN_LIFETIME   60 /* ticks before golden food expires*/
@@ -79,7 +79,34 @@ static voide snake_high_score(void){
 
 }
 
+// placement holder 
 
+static int occupied(int x , int y , int check_food){
+
+  for (int i=0; i<snake_len; i++)
+    if(snake[i].x == x && snake[i].y==y)return 1;
+
+  for (int i=0; i<obstacle_count; i++)
+    if (obstacles[i].x == x && obstacles[i].y == y) return 1;
+  
+  if(check_food && food.x== x && food.y) return 1;
+  return 0;
+}
+
+static void spawn_food(void){
+  do{
+    food.x = rand() %(width - 2 ) + 1;
+    food.y = rand() % (height -2 ) + 1;
+  }while (occupied(food.x, food.y, 0));
+
+  food_is_golden = (rand() % GOLDEN_CHANCE == 0);
+  golden_ticks_left = GOLDEN_LIFETIME;
+}
+
+static voide spawn_obstacles(void){
+  obstacle_count = height / 4;
+  if (obstacle_count > MAX_OBSTACLES) obstacle_count = MAX_OBSTACLES
+}
 
 
 
