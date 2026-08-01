@@ -29,3 +29,70 @@ enum {
 static Point snake[MAX_SNAKE_LEN];
 static int snake_len;
 static Direction dir;
+
+static Point food;
+static int food_is_golden;
+static int golden_ticks_left;
+
+static Point obstacles[MAX_OBSTACLES];
+static int obstacle_count;
+
+static int score;
+static int high_score;
+static int width, height;
+static int paused;
+static int use_color;
+
+// high score persistance 
+
+static const char *high_score_path(void){
+
+  static char path[512];
+  const char *home = getenv("HOME");
+
+  if (home) {
+    snprintf(path, sizeof(path),"%s%s", home, HIGH_SCORE_FILE);
+  } else {
+    snprintf(path, sizeof(path), "./%s", HIGH_SCORE_FILE);
+  }
+  return path;
+}
+
+static void load_high_score(void){
+
+  FILE *f = fopen(high_score_path(),"r");
+
+  if (f) {
+    if(fscanf(f, "%d", &high_score) !=1) high_score= 0;
+    fclose(f);
+  }
+}
+
+static voide snake_high_score(void){
+  if(score <= high_score) return;
+  high_score = score;
+  FILE *f = fopen(high_score_path(),"w");
+  if(f) {
+    fprintf(f, "%d\n",high_score);
+    fclose(f);
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
