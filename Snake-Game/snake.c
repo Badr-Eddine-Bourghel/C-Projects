@@ -103,11 +103,40 @@ static void spawn_food(void){
   golden_ticks_left = GOLDEN_LIFETIME;
 }
 
-static voide spawn_obstacles(void){
+static void spawn_obstacles(void){
   obstacle_count = height / 4;
-  if (obstacle_count > MAX_OBSTACLES) obstacle_count = MAX_OBSTACLES
+  if (obstacle_count > MAX_OBSTACLES) obstacle_count = MAX_OBSTACLES;
+
+  for (int i = 0 ; i < obstacle_count; i++){
+    int x,y;
+    do {
+      x= rand() % (width -2) + 1;
+      y = rand() % (height -2) + 1;
+    }while (occupied(x,y,1) ||
+            (abs(x-width/2) < 5 && abs(y - height/2) < 5));
+    obstacles[i].x = x;
+    obstacles[i].y = y;
+  }
 }
 
+static void init_game(void){
+  getmaxyx(stdscr, height, width);
+  snake_len = 3;
+  dir = DIR_RIGHT;
+  score = 0;
+  paused = 0;
+
+  int start_x = width/2;
+  int start_y = height/2;
+  for(int i=0;i<snake_len; i++){
+    snake[i].x = start_x - i;
+    snake[i].y = start_y;
+  }
+
+  obstacle_count = 0 ; /*place before food so food aboids them*/
+  spawn_obstacles();
+  spawn_food();
+}
 
 
 
