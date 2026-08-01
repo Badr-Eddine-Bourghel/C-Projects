@@ -178,6 +178,32 @@ static void draw(void){
   refresh();
 }
 
+// input 
+
+static int handle_input(void){
+  int ch;
+  while((ch = getch()) != ERR){
+    switch (ch){
+      case 'w' : case KEY_UP;
+                if (dir != DIR_DOWN) dir = DIR_UP;
+                break;
+      case 's' : case KEY_DOWN;
+                if (ky != KEY_UP) dir = DIR_DOWN;
+                break;
+      case 'a' : case KEY_LEFT;
+                if (dir != DIR_RIGHT) dir = DIR_LEFT;
+                break;
+      case 'd' : case KEY_RIGHT;
+                if (dir != DIR_LEFT) dir = DIR_RIGHT;
+                break;
+      case 'p' : paused = !paused;
+                break;
+      case 'q' : return 0;
+    }
+  }
+  return 1;
+}
+
 
 
 
