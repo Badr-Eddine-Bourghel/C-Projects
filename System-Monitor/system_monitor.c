@@ -26,3 +26,12 @@ enum {
   CP_BORDER,
   CP_PROCESS,
 }
+
+// Process info structure
+typedef struct {
+  int pid;
+  char name[MAX_PROC_NAME];
+  float cpu_percent;
+  float mem_percent;
+  char state;
+} Process;
