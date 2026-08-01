@@ -1,0 +1,14 @@
+# Compiled C files
+*.o
+*.out
+*.exe
+./C-Projects/System-Monitor/system_monitor
+
+# Editor backups
+*~
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
