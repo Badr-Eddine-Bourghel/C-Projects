@@ -259,6 +259,24 @@ static int step(void){
   return 1;
 }
 
+// screens
+
+static voide game_over_screen(void){
+  save_high_score();
+  nodelay(stdscr, FALSE);
+  erase();
+  if (use_color) attron(COLOR_PAIR(CP_TEXT));
+  mvprintw(height / 2 - 1, (width -10) / 2, "GAME OVER");
+  mvprintw(height / 2, (width -20) / 2, "Final score: %d", score);
+  mvprintw(height / 2 + 1, (width - 20) / 2, "High score: %d", high_score);
+  mvprintw(height / 2 + 2, (width -26) / 2, "Press any key to exit...");
+  if (use_color) attroff(COLOR_PAIR(CP_TEXT));
+  refresh();
+  getch();
+}
+
+
+
 
 
 
