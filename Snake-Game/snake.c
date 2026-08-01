@@ -68,7 +68,7 @@ static void load_high_score(void){
   }
 }
 
-static voide snake_high_score(void){
+static void save_high_score(void){
   if(score <= high_score) return;
   high_score = score;
   FILE *f = fopen(high_score_path(),"w");
@@ -144,7 +144,7 @@ static void draw(void){
 
   if(use_color) attron(COLOR_PAIR(CP_WALL));
   for (int x = 0 ; x < width; x++){
-    mvaddch(0, x, "#");
+    mvaddch(0, x, '#');
     mvaddch(height - 1, x ,'#');
   }
   for (int y = 0; y<height; y++){
@@ -154,7 +154,7 @@ static void draw(void){
   if (use_color) attroff(COLOR_PAIR(CP_WALL));
 
   if (use_color) attron(COLOR_PAIR(CP_OBSTACLE));
-  for (in i = 0 ; i < obstacle_count; i++){
+  for (int i = 0 ; i < obstacle_count; i++){
     mvaddch(obstacles[i].y, obstacles[i].x,'%');
   }
   if (use_color) attroff(COLOR_PAIR(CP_OBSTACLE));
@@ -184,16 +184,16 @@ static int handle_input(void){
   int ch;
   while((ch = getch()) != ERR){
     switch (ch){
-      case 'w' : case KEY_UP;
+      case 'w' : case KEY_UP:
                 if (dir != DIR_DOWN) dir = DIR_UP;
                 break;
-      case 's' : case KEY_DOWN;
-                if (ky != KEY_UP) dir = DIR_DOWN;
+      case 's' : case KEY_DOWN:
+                if (dir != KEY_UP) dir = DIR_DOWN;
                 break;
-      case 'a' : case KEY_LEFT;
+      case 'a' : case KEY_LEFT:
                 if (dir != DIR_RIGHT) dir = DIR_LEFT;
                 break;
-      case 'd' : case KEY_RIGHT;
+      case 'd' : case KEY_RIGHT:
                 if (dir != DIR_LEFT) dir = DIR_RIGHT;
                 break;
       case 'p' : paused = !paused;
@@ -253,7 +253,7 @@ static int step(void){
     beep();
     spawn_food();
   } else if (food_is_golden){
-    if (--golden_ticks-left <= 0) spawn_food();
+    if (--golden_ticks_left <= 0) spawn_food();
   }
 
   return 1;
@@ -261,7 +261,7 @@ static int step(void){
 
 // screens
 
-static voide game_over_screen(void){
+static void game_over_screen(void){
   save_high_score();
   nodelay(stdscr, FALSE);
   erase();
@@ -293,7 +293,7 @@ static voide game_over_screen(void){
     start_color();
     init_pair(CP_SNAKE, COLOR_GREEN, COLOR_BLACK);
     init_pair(CP_FOOD, COLOR_RED, COLOR_BLACK);
-    init_pair(CP_GOLDEN, COLOR_YELLOW, COLLOR_BLACK);
+    init_pair(CP_GOLDEN, COLOR_YELLOW, COLOR_BLACK);
     init_pair(CP_WALL, COLOR_CYAN, COLOR_BLACK);
     init_pair(CP_OBSTACLE, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(CP_TEXT, COLOR_WHITE, COLOR_BLACK);
@@ -326,18 +326,3 @@ static voide game_over_screen(void){
   printf("Final score: %d (high score : %d)\n" ,score, high_score);
   return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
