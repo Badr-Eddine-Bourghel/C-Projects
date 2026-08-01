@@ -276,6 +276,34 @@ static voide game_over_screen(void){
 }
 
 
+// main
+ int main(void) {
+  srand(time(NULL));
+  load_high_score();
+
+  initscr();
+  cbreak();
+  noecho();
+  keypad(stdscr, TRUE);
+  curs_set(0);
+  nodelay(stdscr, TRUE);
+
+  use_color = has_colors();
+  if (use_color){
+    start_color();
+    init_pair(CP_SNAKE, COLOR_GREEN, COLOR_BLACK);
+    init_pair(CP_FOOD, COLOR_RED, COLOR_BLACK);
+    init_pair(CP_GOLDEN, COLOR_YELLOW, COLLOR_BLACK);
+    init_pair(CP_WALL, COLOR_CYAN, COLOR_BLACK);
+    init_pair(CP_OBSTACLE, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(CP_TEXT, COLOR_WHITE, COLOR_BLACK);
+  }
+
+  init_game();
+
+  int useconds = INITIAL_DELAY_US;
+  int running = 1;
+}
 
 
 
