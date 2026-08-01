@@ -138,6 +138,46 @@ static void init_game(void){
   spawn_food();
 }
 
+// Drawing
+static void draw(void){
+  erase();
+
+  if(use_color) attron(COLOR_PAIR(CP_WALL));
+  for (int x = 0 ; x < width; x++){
+    mvaddch(0, x, "#");
+    mvaddch(height - 1, x ,'#');
+  }
+  for (int y = 0; y<height; y++){
+    mvaddch(y,0,'#');
+    mvaddch(y,width - 1,'#');
+  }
+  if (use_color) attroff(COLOR_PAIR(CP_WALL));
+
+  if (use_color) attron(COLOR_PAIR(CP_OBSTACLE));
+  for (in i = 0 ; i < obstacle_count; i++){
+    mvaddch(obstacles[i].y, obstacles[i].x,'%');
+  }
+  if (use_color) attroff(COLOR_PAIR(CP_OBSTACLE));
+
+  if (use_color) attron(COLOR_PAIR(food_is_golden ? CP_GOLDEN : CP_FOOD));
+  mvaddch(food.y, food.x, food_is_golden ? '$' : '*');
+  if (use_color) attroff(COLOR_PAIR(food_is_golden ? CP_GOLDEN : CP_FOOD));
+
+  if (use_color) attron(COLOR_PAIR(CP_SNAKE));
+  for (int i = 0; i < snake_len; i++)
+    mvaddch(snake[i].y, snake[i].x, i==0 ? 'O' : 'o');
+
+  if (use_color) attroff(COLOR_PAIR(CP_SNAKE));
+
+  if (use_color) attron(COLOR_PAIR(CP_TEXT));
+  mvprintw(0, 2, " Score: %d High: %d ",score, high_score);
+  if (paused)
+    mvprintw(height / 2, (width - 8) / 2, "PAUSED");
+  if (use_color) attroff(COLOR_PAIR(CP_TEXT));
+
+  refresh();
+}
+
 
 
 
