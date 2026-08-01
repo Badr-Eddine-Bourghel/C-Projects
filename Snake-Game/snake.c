@@ -300,9 +300,31 @@ static voide game_over_screen(void){
   }
 
   init_game();
-
+  
   int useconds = INITIAL_DELAY_US;
   int running = 1;
+
+  while (running){
+    if(!handle_input()) break;
+
+    if (!paused){
+      if (!step()) break;
+      draw();
+
+      useconds = INITIAL_DELAY_US - (score * 500);
+      if(useconds < 50000) useconds = 50000;
+    } else {
+      draw();
+    }
+
+    usleep(paused ? 50000 : useconds);
+  }
+
+  game_over_screen();
+  endwin();
+
+  printf("Final score: %d (high score : %d)\n" ,score, high_score);
+  return 0;
 }
 
 
