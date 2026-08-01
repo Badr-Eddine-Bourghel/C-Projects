@@ -1,5 +1,5 @@
 # Compiled binaries
-snake
+./Snake-Game/snake
 *.o
 *.exe
 
