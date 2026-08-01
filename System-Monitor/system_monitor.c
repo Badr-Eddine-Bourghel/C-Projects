@@ -35,3 +35,17 @@ typedef struct {
   float mem_percent;
   char state;
 } Process;
+
+// System stats 
+typedef struct {
+  float cpu_usage;
+  unsigned long mem_total;
+  unsigned long mem_free;
+  unsigned long mem_available;
+  unsigned long swap_total;
+  unsigned long swap_free;
+  float load_avg[3];
+  long uptime_seconds;
+  Process processes[MAX_PROCESSES];
+  int process_count;
+} SystemStats
